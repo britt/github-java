@@ -5,8 +5,8 @@ import java.util.Date;
 
 public class Commit {
   String id, message, url, tree;
-  Committer author, commiter;
-  Collection<String> added, removed;
+  Committer author, committer;
+  Collection<String> added, removed, parents;
   Date commitDate, authorDate;
   Collection<Modification> modified;
 
@@ -52,12 +52,12 @@ public class Commit {
     this.author = author;
   }
 
-  public Committer getCommiter() {
-    return commiter;
+  public Committer getCommitter() {
+    return committer;
   }
 
-  public void setCommiter(Committer commiter) {
-    this.commiter = commiter;
+  public void setCommitter(Committer committer) {
+    this.committer = committer;
   }
 
   public Collection<String> getAdded() {
@@ -98,5 +98,13 @@ public class Commit {
 
   public void setModified(Collection<Modification> modified) {
     this.modified = modified;
+  }
+
+  public Collection<String> getParents() {
+    return parents;
+  }
+
+  public void setParents(Collection<String> parents) {
+    this.parents = parents;
   }
 }
