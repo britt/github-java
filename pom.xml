@@ -6,19 +6,24 @@
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>github-api</name>
-  <url>http://maven.apache.org</url>
+  <url>http://github.com/britt/github-java/tree/master</url>
   <distributionManagement>
-      <repository>
-        <id>HiveDB</id>
-        <name>HiveDB Repository</name>
-        <url>scp://svn.hivedb.org/home/hivedb/public_html/hivedb.org/maven</url>
-      </repository>
-    </distributionManagement>
+    <repository>
+      <id>HiveDB</id>
+      <name>HiveDB Repository</name>
+      <url>scp://svn.hivedb.org/home/hivedb/public_html/hivedb.org/maven</url>
+    </repository>
+  </distributionManagement>
   <dependencies>
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.14</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
     </dependency>
     <dependency>
       <groupId>org.jyaml</groupId>
