@@ -24,16 +24,15 @@ public class GitHubTest extends TestCase {
 
   public void testGetCommit() throws Exception {
     Commit commit = gitHub.getCommit(addCommit);
-    assertEquals(commit.getId(), commit);
+    assertEquals(addCommit, commit.getId());
     validateBasicCommit(commit);
     assertTrue(commit.getAdded().size() > 0);
   }
 
   public void testDiffs() throws Exception {
     Commit commit = gitHub.getCommit(modifyCommit);
-    assertEquals(commit.getId(), commit);
+    assertEquals(modifyCommit, commit.getId());
     validateBasicCommit(commit);
-    assertTrue(commit.getAdded().size() > 0);
     assertTrue(commit.getModified().size() > 0);
     for(Modification mod : commit.getModified())
       validateModification(mod);

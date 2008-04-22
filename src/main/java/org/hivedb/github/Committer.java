@@ -15,7 +15,7 @@ public class Committer {
   }
 
   public static Committer loadJSON(JSONObject o) throws JSONException {
-    return new Committer(JSON.getIfExists("name",o).toString(), JSON.getIfExists("email",o).toString());
+    return new Committer(JSON.getIfExists("name","",o).toString(), JSON.getIfExists("email","",o).toString());
   }
 
   public String getName() {

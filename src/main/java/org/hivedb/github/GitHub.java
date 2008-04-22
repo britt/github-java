@@ -7,16 +7,18 @@ import org.json.JSONObject;
 import org.json.JSONException;
 import org.json.JSONArray;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 //  http://github.com/api/version/format/username/repository/type/object
 public class GitHub {
   private Logger log = Logger.getLogger(GitHub.class);
 
+  private static final String GITHUB_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+  private static SimpleDateFormat dateFormat = new SimpleDateFormat(GitHub.GITHUB_DATE_FORMAT);
+  
   private String userName;
   private String repository;
   private String version = "1";
@@ -48,15 +50,22 @@ public class GitHub {
           commits.add(Commit.loadJSON((JSONObject) commit));
       }
     } catch (JSONException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
 
     return commits;
   }
 
   public Commit getCommit(String id) {
-    throw new UnsupportedOperationException();
+    String url = GitHub.formatUrl(getUserName(), getRepository(), "commit", id, getVersion());
+    JSONObject response = doGet(url);
+    try {
+      return Commit.loadJSON((JSONObject) JSON.getIfExists("commit","",response));
+    } catch (JSONException e) {
+      throw new RuntimeException(e);
+    }
   }
+  
 
   public GitHubUser getUserInfo() {
     throw new UnsupportedOperationException();
@@ -90,6 +99,12 @@ public class GitHub {
       throw new RuntimeException(e);
     }
     return json;
+  }
+
+  public static Date parseDate(String dateString) throws ParseException {
+    int tzError = dateString.lastIndexOf(':');
+    String rfc822 = dateString.substring(0,tzError) + dateString.substring(tzError+1);
+    return dateFormat.parse(rfc822);
   }
 
   public String getUserName() {

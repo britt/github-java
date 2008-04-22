@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import java.util.Collection;
 import java.util.Date;
 import java.util.ArrayList;
+import java.text.ParseException;
 
 public class Commit {
   String id, message, url, tree;
@@ -17,20 +18,37 @@ public class Commit {
 
   public static Commit loadJSON(JSONObject o) throws JSONException {
     Commit commit = new Commit();
-    commit.setMessage(JSON.getIfExists("message", o).toString());
-    commit.setUrl(JSON.getIfExists("url", o).toString());
-    commit.setId(JSON.getIfExists("id", o).toString());
-    commit.setTree(JSON.getIfExists("tree", o).toString());
-    commit.setAuthor(Committer.loadJSON((JSONObject) o.get("author")));
-    commit.setCommitter(Committer.loadJSON((JSONObject) o.get("committer")));
-    commit.setParents(getParents((JSONArray) o.get("parents")));
+    commit.setMessage(JSON.getIfExists("message", "", o).toString());
+    commit.setUrl(JSON.getIfExists("url", "", o).toString());
+    commit.setId(JSON.getIfExists("id","", o).toString());
+    commit.setTree(JSON.getIfExists("tree","", o).toString());
+    commit.setAuthor(Committer.loadJSON((JSONObject) JSON.getIfExists("author", new JSONObject(), o)));
+    commit.setCommitter(Committer.loadJSON((JSONObject) JSON.getIfExists("committer", new JSONObject(), o)));
+    commit.setParents(mapToCollection("id", (JSONArray) JSON.getIfExists("parents", new JSONArray(), o)));
+    try {
+      commit.setCommitDate(GitHub.parseDate(JSON.getIfExists("committed_date","",o).toString()));
+      commit.setAuthorDate(GitHub.parseDate(JSON.getIfExists("authored_date","",o).toString()));
+    } catch (ParseException e) {
+      throw new JSONException(e);
+    }
+    commit.setAdded(mapToCollection("filename", (JSONArray) JSON.getIfExists("added", new JSONArray(), o)));
+    commit.setRemoved(mapToCollection("filename", (JSONArray) JSON.getIfExists("removed", new JSONArray(), o)));
+
+    JSONArray a = (JSONArray) JSON.getIfExists("modified", new JSONArray(), o);
+    Collection<Modification> mods = new ArrayList<Modification>();
+    
+    for(int i=0; i<a.length(); i++)
+      mods.add(Modification.loadJSON((JSONObject) a.get(i)));
+
+    commit.setModified(mods);
+
     return commit;
   }
 
-  private static Collection<String> getParents(JSONArray a) throws JSONException {
+  private static Collection<String> mapToCollection(String key, JSONArray a) throws JSONException {
     Collection<String> s = new ArrayList<String>();
     for(int i=0; i<a.length(); i++) {
-      Object parent = ((JSONObject) a.get(i)).get("id");
+      Object parent = ((JSONObject) a.get(i)).get(key);
       s.add(parent.toString());
     }
     return s;
