@@ -4,7 +4,7 @@
   <groupId>org.hivedb</groupId>
   <artifactId>github-api</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>github-api</name>
   <url>http://github.com/britt/github-java/tree/master</url>
   <distributionManagement>
@@ -38,7 +38,7 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>git-vcs</finalName>
+    <finalName>github-api</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
