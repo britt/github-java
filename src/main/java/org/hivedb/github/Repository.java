@@ -1,10 +1,22 @@
 package org.hivedb.github;
 
+import org.json.JSONObject;
+import org.json.JSONException;
+
 public class Repository {
   private String name;
   private String url;
   private String description;
   private String homePage;
+
+  public static Repository loadJSON(JSONObject o) throws JSONException {
+    Repository repo = new Repository();
+    repo.setName(JSON.getIfExists("name","",o).toString());
+    repo.setUrl(JSON.getIfExists("url","",o).toString());
+    repo.setDescription(JSON.getIfExists("description","",o).toString());    
+    repo.setHomePage(JSON.getIfExists("homepage","",o).toString());
+    return repo;
+  }
 
   public Repository(){}
 

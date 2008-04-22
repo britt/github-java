@@ -68,11 +68,21 @@ public class GitHub {
   
 
   public GitHubUser getUserInfo() {
-    throw new UnsupportedOperationException();
+    String url = GitHub.formatUserInfoUrl(getUserName(), getVersion());
+    JSONObject response = doGet(url);
+    try {
+      return GitHubUser.loadJSON((JSONObject) JSON.getIfExists("user","",response));
+    } catch (JSONException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public static String formatUrl(String userName, String repository, String type, String objectId, String version){
     return String.format("http://github.com/api/v%s/json/%s/%s/%s/%s", version, userName, repository, type, objectId);
+  }
+
+  public static String formatUserInfoUrl(String userName, String version){
+    return String.format("http://github.com/api/v%s/json/%s", version, userName);
   }
 
   private JSONObject doGet(String url) {

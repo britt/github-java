@@ -43,11 +43,6 @@ public class GitHubTest extends TestCase {
     assertNotNull(mod.getFileName());
   }
 
-  public void testGetNonExistentCommit() throws Exception {
-    Commit commit = gitHub.getCommit("aFakeCommit");
-    assertNull(commit);
-  }
-
   public void testGetUserInfo() throws Exception {
     GitHubUser britt = gitHub.getUserInfo();
     validateCommitter(britt);
