@@ -107,4 +107,12 @@ public class Commit {
   public void setParents(Collection<String> parents) {
     this.parents = parents;
   }
+
+  public int hashCode() {
+    return id.hashCode();
+  }
+
+  public boolean equals(Object obj) {
+    return this.hashCode() == obj.hashCode();
+  }
 }

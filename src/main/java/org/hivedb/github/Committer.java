@@ -27,4 +27,7 @@ public class Committer {
     this.email = email;
   }
 
+  public boolean isSamePerson(Committer committer) {
+    return this.email.equals(committer.getEmail());
+  }
 }
