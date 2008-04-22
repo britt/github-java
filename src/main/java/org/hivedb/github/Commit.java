@@ -1,7 +1,12 @@
 package org.hivedb.github;
 
+import org.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONArray;
+
 import java.util.Collection;
 import java.util.Date;
+import java.util.ArrayList;
 
 public class Commit {
   String id, message, url, tree;
@@ -9,6 +14,27 @@ public class Commit {
   Collection<String> added, removed, parents;
   Date commitDate, authorDate;
   Collection<Modification> modified;
+
+  public static Commit loadJSON(JSONObject o) throws JSONException {
+    Commit commit = new Commit();
+    commit.setMessage(JSON.getIfExists("message", o).toString());
+    commit.setUrl(JSON.getIfExists("url", o).toString());
+    commit.setId(JSON.getIfExists("id", o).toString());
+    commit.setTree(JSON.getIfExists("tree", o).toString());
+    commit.setAuthor(Committer.loadJSON((JSONObject) o.get("author")));
+    commit.setCommitter(Committer.loadJSON((JSONObject) o.get("committer")));
+    commit.setParents(getParents((JSONArray) o.get("parents")));
+    return commit;
+  }
+
+  private static Collection<String> getParents(JSONArray a) throws JSONException {
+    Collection<String> s = new ArrayList<String>();
+    for(int i=0; i<a.length(); i++) {
+      Object parent = ((JSONObject) a.get(i)).get("id");
+      s.add(parent.toString());
+    }
+    return s;
+  }
 
   public Commit() {}
 

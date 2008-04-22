@@ -18,8 +18,8 @@ public class GitHubTest extends TestCase {
   public void testGetCommits() throws Exception {
     Collection<Commit> commits = gitHub.getCommits();
     assertTrue(commits.size() > 0);
-//    for(Commit commit : commits)
-//      validateBasicCommit(commit);
+    for(Commit commit : commits)
+      validateBasicCommit(commit);
   }
 
   public void testGetCommit() throws Exception {
@@ -69,7 +69,7 @@ public class GitHubTest extends TestCase {
 
   private void validateBasicCommit(Commit commit) {
     assertNotNull(commit.getMessage());
-    assertTrue(commit.getParents().size() > 0);
+    assertNotNull(commit.getParents());
     validateCommitter(commit.getAuthor());
     assertNotNull(commit.getId());
     assertNotNull(commit.getCommitDate());

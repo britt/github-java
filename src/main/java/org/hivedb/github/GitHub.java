@@ -5,6 +5,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.json.JSONException;
+import org.json.JSONArray;
 
 import java.util.Collection;
 import java.util.Map;
@@ -39,17 +40,17 @@ public class GitHub {
     JSONObject response = doGet(url);
     Collection<Commit> commits = new ArrayList<Commit>();
 
-    Iterator i = response.keys();
-    while(i.hasNext()) {
-      String key = i.next().toString();
-      try {
-        log.debug(key + " => " + response.get(key));
-        if(response.get(key) != null)
-          commits.add(new Commit());
-      } catch (JSONException e) {
-        e.printStackTrace();
+    try {
+      JSONArray a = (JSONArray) response.get("commits");
+      for(int i=0; i<a.length(); i++) {
+        Object commit = a.get(i);
+        if(commit.getClass().equals(JSONObject.class))
+          commits.add(Commit.loadJSON((JSONObject) commit));
       }
+    } catch (JSONException e) {
+      e.printStackTrace();
     }
+
     return commits;
   }
 
@@ -70,7 +71,7 @@ public class GitHub {
     String body;
     int code;
     try {
-      log.info("Executing HTTP/GET " + url);
+      log.debug("Executing HTTP/GET " + url);
       code = http.executeMethod(get);
       if(code >= 200 && code < 300) {
         body = new String(get.getResponseBody());
@@ -81,7 +82,7 @@ public class GitHub {
     } catch (IOException e) {
       throw new RuntimeException("Error connecting to GitHub: " + url, e);
     }
-    log.debug("Reponse returned:\n" + body.trim());
+
     JSONObject json = null;
     try {
       json = new JSONObject(body.trim());
