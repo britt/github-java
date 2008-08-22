@@ -9,8 +9,8 @@
 * Or simply include the library as a dependency in your maven project.
   * Add the HiveDB maven repository
 
-              <repository>
-                  <id>HiveDB</id>
+              &gt;repository&lt;
+                  &gt;id&lt;HiveDB&gt;/id&lt;
                   <url>http://www.hivedb.org/maven/</url>
               </repository>
   
