@@ -13,7 +13,7 @@
                   <id>HiveDB</id>
                   <url>http://www.hivedb.org/maven/</url>
               </repository>
-  
+
   * Add the dependency
   
                <dependency>
